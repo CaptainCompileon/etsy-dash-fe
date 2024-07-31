@@ -1,11 +1,11 @@
 import { CONFIG } from 'src/config-global';
 
-import { BlankView } from 'src/sections/blank/view';
+import { OrderListView } from 'src/sections/order/view';
 
 // ----------------------------------------------------------------------
 
 export const metadata = { title: `Page three | Dashboard - ${CONFIG.site.name}` };
 
 export default function Page() {
-  return <BlankView title="Page three" />;
+  return <OrderListView />;
 }

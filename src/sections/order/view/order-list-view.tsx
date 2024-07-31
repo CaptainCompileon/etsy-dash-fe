@@ -1,37 +1,41 @@
 'use client';
 
-import type { IOrderItem, IOrderTableFilters } from 'src/types/order';
+import type {IOrderItem, IOrderTableFilters} from 'src/types/order';
 
-import { useState, useCallback } from 'react';
+import React, {useState, useCallback} from 'react';
 
 import Tab from '@mui/material/Tab';
 import Box from '@mui/material/Box';
 import Tabs from '@mui/material/Tabs';
 import Card from '@mui/material/Card';
 import Table from '@mui/material/Table';
+import Stack from "@mui/material/Stack";
 import Button from '@mui/material/Button';
 import Tooltip from '@mui/material/Tooltip';
+import Divider from "@mui/material/Divider";
+import {useTheme} from "@mui/material/styles";
 import TableBody from '@mui/material/TableBody';
 import IconButton from '@mui/material/IconButton';
 
-import { paths } from 'src/routes/paths';
-import { useRouter } from 'src/routes/hooks';
+import {paths} from 'src/routes/paths';
+import {useRouter} from 'src/routes/hooks';
 
-import { useBoolean } from 'src/hooks/use-boolean';
-import { useSetState } from 'src/hooks/use-set-state';
+import {useBoolean} from 'src/hooks/use-boolean';
+import {useSetState} from 'src/hooks/use-set-state';
 
-import { fIsAfter, fIsBetween } from 'src/utils/format-time';
+import {sumBy} from 'src/utils/helper';
+import {fIsAfter, fIsBetween} from 'src/utils/format-time';
 
-import { _orders } from 'src/_mock';
-import { varAlpha } from 'src/theme/styles';
-import { DashboardContent } from 'src/layouts/dashboard';
+import {_orders} from 'src/_mock';
+import {varAlpha} from 'src/theme/styles';
+import {DashboardContent} from 'src/layouts/dashboard';
 
-import { Label } from 'src/components/label';
-import { toast } from 'src/components/snackbar';
-import { Iconify } from 'src/components/iconify';
-import { Scrollbar } from 'src/components/scrollbar';
-import { ConfirmDialog } from 'src/components/custom-dialog';
-import { CustomBreadcrumbs } from 'src/components/custom-breadcrumbs';
+import {Label} from 'src/components/label';
+import {toast} from 'src/components/snackbar';
+import {Iconify} from 'src/components/iconify';
+import {Scrollbar} from 'src/components/scrollbar';
+import {ConfirmDialog} from 'src/components/custom-dialog';
+import {CustomBreadcrumbs} from 'src/components/custom-breadcrumbs';
 import {
   useTable,
   emptyRows,
@@ -44,32 +48,37 @@ import {
   TablePaginationCustom,
 } from 'src/components/table';
 
-import { OrderTableRow } from '../order-table-row';
-import { OrderTableToolbar } from '../order-table-toolbar';
-import { Status, STATUS_OPTIONS } from '../etsy/etsy-api.types';
-import { OrderTableFiltersResult } from '../order-table-filters-result';
+import {OrderAnalytic} from "../order-analytic";
+import {OrderTableRow} from '../order-table-row';
+import { STATUS_OPTIONS} from '../etsy/etsy-api.types';
+import {OrderTableToolbar} from '../order-table-toolbar';
+import {OrderTableFiltersResult} from '../order-table-filters-result';
+
+import type {Status} from '../etsy/etsy-api.types';
 
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
-  { id: 'orderNumber', label: 'Order', width: 88 },
-  { id: 'name', label: 'Customer' },
-  { id: 'createdAt', label: 'Date', width: 140 },
+  {id: 'orderNumber', label: 'Order', width: 88},
+  {id: 'name', label: 'Customer'},
+  {id: 'createdAt', label: 'Date', width: 140},
   {
     id: 'totalQuantity',
     label: 'Items',
     width: 120,
     align: 'center',
   },
-  { id: 'totalAmount', label: 'Price', width: 140 },
-  { id: 'status', label: 'Status', width: 110 },
-  { id: '', width: 88 },
+  {id: 'totalAmount', label: 'Price', width: 140},
+  {id: 'status', label: 'Status', width: 110},
+  {id: '', width: 88},
 ];
 
 // ----------------------------------------------------------------------
 
 export function OrderListView() {
-  const table = useTable({ defaultOrderBy: 'orderNumber' });
+  const theme = useTheme();
+
+  const table = useTable({defaultOrderBy: 'orderNumber'});
 
   const router = useRouter();
 
@@ -136,12 +145,27 @@ export function OrderListView() {
   );
 
   const handleFilterStatus = useCallback(
-    (event: React.SyntheticEvent, newValue: string) => {
+    (event: React.SyntheticEvent, newValue: Status) => {
       table.onResetPage();
-      filters.setState({ status: Status });
+      filters.setState({
+        status: newValue
+      });
     },
     [filters, table]
   );
+
+  const getInvoiceLength = (status: string) =>
+    tableData.filter((item) => item.status === status).length;
+
+  const getTotalAmount = (status: string) =>
+    sumBy(
+      tableData.filter((item) => item.status === status),
+      (invoice) => invoice.totalAmount
+    );
+
+  const getPercentByStatus = (status: string) =>
+    (getInvoiceLength(status) / tableData.length) * 100;
+
 
   return (
     <>
@@ -149,12 +173,67 @@ export function OrderListView() {
         <CustomBreadcrumbs
           heading="List"
           links={[
-            { name: 'Dashboard', href: paths.dashboard.root },
-            { name: 'Order', href: paths.dashboard.order.root },
-            { name: 'List' },
+            {name: 'Dashboard', href: paths.dashboard.root},
+            {name: 'Order', href: paths.dashboard.order.root},
+            {name: 'List'},
           ]}
-          sx={{ mb: { xs: 3, md: 5 } }}
+          sx={{mb: {xs: 3, md: 5}}}
         />
+
+        <Card sx={{mb: {xs: 3, md: 5}}}>
+          <Scrollbar sx={{minHeight: 108}}>
+            <Stack
+              direction="row"
+              divider={<Divider orientation="vertical" flexItem sx={{borderStyle: 'dashed'}}/>}
+              sx={{py: 2}}
+            >
+              <OrderAnalytic
+                title="Total"
+                total={tableData.length}
+                percent={100}
+                price={sumBy(tableData, (invoice) => invoice.totalAmount)}
+                icon="solar:bill-list-bold-duotone"
+                color={theme.vars.palette.info.main}
+              />
+
+              <OrderAnalytic
+                title="Paid"
+                total={getInvoiceLength('paid')}
+                percent={getPercentByStatus('paid')}
+                price={getTotalAmount('paid')}
+                icon="solar:file-check-bold-duotone"
+                color={theme.vars.palette.success.main}
+              />
+
+              <OrderAnalytic
+                title="Pending"
+                total={getInvoiceLength('pending')}
+                percent={getPercentByStatus('pending')}
+                price={getTotalAmount('pending')}
+                icon="solar:sort-by-time-bold-duotone"
+                color={theme.vars.palette.warning.main}
+              />
+
+              <OrderAnalytic
+                title="Overdue"
+                total={getInvoiceLength('overdue')}
+                percent={getPercentByStatus('overdue')}
+                price={getTotalAmount('overdue')}
+                icon="solar:bell-bing-bold-duotone"
+                color={theme.vars.palette.error.main}
+              />
+
+              <OrderAnalytic
+                title="Draft"
+                total={getInvoiceLength('draft')}
+                percent={getPercentByStatus('draft')}
+                price={getTotalAmount('draft')}
+                icon="solar:file-corrupted-bold-duotone"
+                color={theme.vars.palette.text.secondary}
+              />
+            </Stack>
+          </Scrollbar>
+        </Card>
 
         <Card>
           <Tabs
@@ -162,8 +241,8 @@ export function OrderListView() {
             onChange={handleFilterStatus}
             sx={{
               px: 2.5,
-              boxShadow: (theme) =>
-                `inset 0 -2px 0 0 ${varAlpha(theme.vars.palette.grey['500Channel'], 0.08)}`,
+              boxShadow: (themee) =>
+                `inset 0 -2px 0 0 ${varAlpha(themee.vars.palette.grey['500Channel'], 0.08)}`,
             }}
           >
             {STATUS_OPTIONS.map((tab) => (
@@ -205,11 +284,11 @@ export function OrderListView() {
               filters={filters}
               totalResults={dataFiltered.length}
               onResetPage={table.onResetPage}
-              sx={{ p: 2.5, pt: 0 }}
+              sx={{p: 2.5, pt: 0}}
             />
           )}
 
-          <Box sx={{ position: 'relative' }}>
+          <Box sx={{position: 'relative'}}>
             <TableSelectedAction
               dense={table.dense}
               numSelected={table.selected.length}
@@ -223,14 +302,14 @@ export function OrderListView() {
               action={
                 <Tooltip title="Delete">
                   <IconButton color="primary" onClick={confirm.onTrue}>
-                    <Iconify icon="solar:trash-bin-trash-bold" />
+                    <Iconify icon="solar:trash-bin-trash-bold"/>
                   </IconButton>
                 </Tooltip>
               }
             />
 
-            <Scrollbar sx={{ minHeight: 444 }}>
-              <Table size={table.dense ? 'small' : 'medium'} sx={{ minWidth: 960 }}>
+            <Scrollbar sx={{minHeight: 444}}>
+              <Table size={table.dense ? 'small' : 'medium'} sx={{minWidth: 960}}>
                 <TableHeadCustom
                   order={table.order}
                   orderBy={table.orderBy}
@@ -268,7 +347,7 @@ export function OrderListView() {
                     emptyRows={emptyRows(table.page, table.rowsPerPage, dataFiltered.length)}
                   />
 
-                  <TableNoData notFound={notFound} />
+                  <TableNoData notFound={notFound}/>
                 </TableBody>
               </Table>
             </Scrollbar>
@@ -321,8 +400,8 @@ type ApplyFilterProps = {
   comparator: (a: any, b: any) => number;
 };
 
-function applyFilter({ inputData, comparator, filters, dateError }: ApplyFilterProps) {
-  const { status, name, startDate, endDate } = filters;
+function applyFilter({inputData, comparator, filters, dateError}: ApplyFilterProps) {
+  const {status, name, startDate, endDate} = filters;
 
   const stabilizedThis = inputData.map((el, index) => [el, index] as const);
 

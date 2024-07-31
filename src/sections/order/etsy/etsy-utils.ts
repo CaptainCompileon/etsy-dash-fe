@@ -1,12 +1,12 @@
+import type {ShopReceipt} from "./etsy-api.types";
 import type { ShopWithUserId } from './useApi.js';
-import type { ShopReceipt } from './etsy-api.types.ts';
 
-export const createFinanceSheet = (data: ShopReceipt[]): FinanceSheet =>
+export const createFinanceSheet = (data: ShopReceipt[]): FinanceSheet[] =>
   data.map((item, index) => {
     const nameSplit = item.name ? item.name.split(' ') : null;
     const productQuantity =
       item?.transactions.length > 0
-        ? item.transactions.reduce((acc, curr) => acc + (curr as { quantity: number })?.quantity, 0)
+        ? item.transactions.reduce((acc, curr) => acc + (curr as { quantity: number }).quantity, 0)
         : null;
 
     const formatDate = (timestampInSeconds: number) => {
@@ -15,7 +15,7 @@ export const createFinanceSheet = (data: ShopReceipt[]): FinanceSheet =>
       return date.toLocaleDateString();
     };
 
-    const financeSheet = {
+    const financeSheet: FinanceSheet = {
       firstName: nameSplit ? nameSplit[0] : '',
       middleName: nameSplit ? (nameSplit.length > 2 ? nameSplit[1] : '') : '',
       lastName: nameSplit ? (nameSplit.length > 2 ? nameSplit[2] : nameSplit[1]) : '',
@@ -43,19 +43,20 @@ export const createFinanceSheet = (data: ShopReceipt[]): FinanceSheet =>
       shopReceipt: item,
       // TODO: find other solution
       avatarUrl: `/assets/images/avatars/avatar_${index + 1}.jpg`,
+      netProfit: 0,
     };
 
     const netProfit =
-      financeSheet.subTotal +
-      financeSheet.totalShippingCost -
-      financeSheet.transactionFees -
-      financeSheet.tfVAT -
-      financeSheet.processingFees -
-      financeSheet.pfVAT -
-      financeSheet.listingFee -
-      financeSheet.lfVAT -
-      financeSheet.shippingFee -
-      financeSheet.sfVAT;
+        (financeSheet.subTotal ?? 0) +
+        (financeSheet.totalShippingCost ?? 0) -
+        (financeSheet.transactionFees ?? 0) -
+        (financeSheet.tfVAT ?? 0) -
+        (financeSheet.processingFees ?? 0) -
+        (financeSheet.pfVAT ?? 0) -
+        (financeSheet.listingFee ?? 0) -
+        (financeSheet.lfVAT ?? 0) -
+        (financeSheet.shippingFee ?? 0) -
+        (financeSheet.sfVAT ?? 0);
 
     // TODO(Question): is it possible that the value is invalid or other than number?
     if (netProfit !== null) {
@@ -64,29 +65,29 @@ export const createFinanceSheet = (data: ShopReceipt[]): FinanceSheet =>
     return financeSheet;
   });
 
-export type FinanceSheet = Partial<{
+export type FinanceSheet = {
   firstName: string;
   middleName: string;
   lastName: string;
   orderDate: string;
-  itemPrice: number | null;
-  discount: number | null;
-  subTotal: number | null;
-  totalShippingCost: number | null;
-  tax: number | null;
-  total: number | null;
-  transactionFees: number | null;
-  tfVAT: number | null;
-  processingFees: number | null;
-  pfVAT: number | null;
-  listingFee: number | null;
-  lfVAT: number | null;
-  shippingFee: number | null;
-  sfVAT: number | null;
+  itemPrice: number;
+  discount: number;
+  subTotal: number;
+  totalShippingCost: number;
+  tax: number;
+  total: number;
+  transactionFees: number;
+  tfVAT: number;
+  processingFees: number;
+  pfVAT: number;
+  listingFee: number;
+  lfVAT: number;
+  shippingFee: number;
+  sfVAT: number;
   shopReceipt: ShopReceipt;
   avatarUrl: string;
   netProfit: number;
-}>[];
+};
 
 export type Shop = {
   icon?: string;

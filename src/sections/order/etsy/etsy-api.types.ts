@@ -14,15 +14,16 @@ export const STATUSES = [
   'all',
 ] as const;
 
-export const STATUS_OPTIONS = [
-  { value: 'paid', label: 'Paid' },
-  { value: 'completed', label: 'Completed' },
-  { value: 'open', label: 'Open' },
-  { value: 'canceled', label: 'Canceled' },
-  { value: 'payment processing', label: 'Payment Processing' },
-  { value: 'fully refunded', label: 'Fully Refunded' },
-  { value: 'partially refunded', label: 'Partially Refunded' },
-  { value: 'all', label: 'All' },
+export type StatusOption = { value: Status, label: string };
+export const STATUS_OPTIONS: StatusOption[] = [
+  {value: 'paid', label: 'Paid'},
+  {value: 'completed', label: 'Completed'},
+  {value: 'open', label: 'Open'},
+  {value: 'canceled', label: 'Canceled'},
+  {value: 'payment processing', label: 'Payment Processing'},
+  {value: 'fully refunded', label: 'Fully Refunded'},
+  {value: 'partially refunded', label: 'Partially Refunded'},
+  {value: 'all', label: 'All'},
 ];
 
 export type Status = (typeof STATUSES)[number];
@@ -107,7 +108,7 @@ export type ShopReceipt = {
   discount_amt: PriceDetailsGeneral;
   gift_wrap_price: PriceDetailsGeneral;
   shipments: Array<object>;
-  transactions: Array<object>;
+  transactions: Array<Transaction>;
   refunds: Array<Transaction>;
 };
 

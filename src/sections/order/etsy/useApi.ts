@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react';
 import { fetchShopListingMock } from './etsy-api';
 import { createFinanceSheet } from './etsy-utils';
 
-import type { Shop, UserData, FinanceSheet } from './etsy-utils';
+import type { Shop, FinanceSheet } from './etsy-utils';
 import type { ShopReceipt, Transaction, EtsyApiResponse } from './etsy-api.types';
 
 export type ShopWithUserId = Shop & { user_id?: number };
@@ -143,7 +143,7 @@ export function getShopLoginLink(
 }
 
 export function useApiShopReceiptsMock() {
-  const [userData, setoUserData] = useState<UserData[]>([]);
+  const [financeSheets, setFinanceSheets] = useState<FinanceSheet[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
@@ -151,14 +151,14 @@ export function useApiShopReceiptsMock() {
       try {
         const response = await fetchShopListingMock();
         const results = response?.results ? response?.results : [];
-        const financeSheet = createFinanceSheet(results);
-        const uData: UserData[] = [
-          {
-            user: { shop_id: 1, user_id: 2 },
-            data: financeSheet,
-          },
-        ];
-        setoUserData(uData);
+        // const financeSheets = createFinanceSheet(results);
+        // const uData: UserData[] = [
+        //   {
+        //     user: { shop_id: 1, user_id: 2 },
+        //     data: financeSheets,
+        //   },
+        // ];
+        setFinanceSheets(createFinanceSheet(results));
         setLoading(false);
       } catch (error) {
         setLoading(false);
@@ -172,7 +172,7 @@ export function useApiShopReceiptsMock() {
     };
   }, []);
 
-  return { userData, loading };
+  return { financeSheets, loading };
 }
 
 export function useDeleteUserById(apiUrl = process.env.API_URL || 'http://localhost:3003') {

@@ -1,6 +1,7 @@
+// eslint-disable-next-line import/no-extraneous-dependencies
 import _ from 'lodash';
 
-import { FinanceSheet } from './etsy/etsy-utils.ts';
+import type { FinanceSheet } from './etsy/etsy-utils';
 
 export const visuallyHidden = {
   border: 0,
@@ -60,9 +61,7 @@ export function applyFilter({ inputData, comparator, filterName, statuses }) {
 
   // filter by status
   if (statuses.length) {
-    inputData = inputData.filter((user: FinanceSheet) => {
-      return statuses.includes(user.shopReceipt?.status?.toLowerCase());
-    });
+    inputData = inputData.filter((user: FinanceSheet) => statuses.includes(user.shopReceipt?.status?.toLowerCase()));
   }
 
   return inputData;

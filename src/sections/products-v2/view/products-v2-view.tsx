@@ -53,9 +53,9 @@ export default function ProductsV2View() {
     setStatuses(newStatuses);
   };
 
-  const handledateRangeChange = (dateRange) => {
+  const handledateRangeChange = (dateRangee) => {
     setPage(0);
-    setDateRange(dateRange);
+    setDateRange(dateRangee);
   };
 
   const headLabel = [

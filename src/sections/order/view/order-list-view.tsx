@@ -35,7 +35,6 @@ import {CustomBreadcrumbs} from 'src/components/custom-breadcrumbs';
 import {
     useTable,
     emptyRows,
-    rowInPage,
     TableNoData,
     getComparator,
     TableEmptyRows,
@@ -85,8 +84,6 @@ export function OrderListView() {
 
     const {financeSheets} = useApiShopReceiptsMock()
 
-    // const [tableData, setTableData] = useState<FinanceSheet[]>(financeSheets);
-
     const filters = useSetState<IOrderTableFilters>({
         name: '',
         status: 'all',
@@ -102,8 +99,6 @@ export function OrderListView() {
         filters: filters.state,
         dateError,
     });
-
-    const dataInPage = rowInPage(dataFiltered, table.page, table.rowsPerPage);
 
     const canReset =
         !!filters.state.name ||
@@ -171,37 +166,36 @@ export function OrderListView() {
                             />
 
                             <OrderAnalytic
-                                title="Paid"
-                                total={getInvoiceLength('paid')}
-                                percent={getPercentByStatus('paid')}
-                                price={getTotalAmount('paid')}
+                                title="Completed"
+                                total={getInvoiceLength('completed')}
+                                percent={getPercentByStatus('completed')}
+                                price={getTotalAmount('completed')}
                                 icon="solar:file-check-bold-duotone"
                                 color={theme.vars.palette.success.main}
                             />
-
                             <OrderAnalytic
-                                title="Pending"
-                                total={getInvoiceLength('pending')}
-                                percent={getPercentByStatus('pending')}
-                                price={getTotalAmount('pending')}
+                                title="Partially refunded"
+                                total={getInvoiceLength('partially refunded')}
+                                percent={getPercentByStatus('partially refunded')}
+                                price={getTotalAmount('partially refunded')}
                                 icon="solar:sort-by-time-bold-duotone"
                                 color={theme.vars.palette.warning.main}
                             />
 
                             <OrderAnalytic
-                                title="Overdue"
-                                total={getInvoiceLength('overdue')}
-                                percent={getPercentByStatus('overdue')}
-                                price={getTotalAmount('overdue')}
+                                title="Fully Refunded"
+                                total={getInvoiceLength('fully refunded')}
+                                percent={getPercentByStatus('fully refunded')}
+                                price={getTotalAmount('fully refunded')}
                                 icon="solar:bell-bing-bold-duotone"
                                 color={theme.vars.palette.error.main}
                             />
 
                             <OrderAnalytic
-                                title="Draft"
-                                total={getInvoiceLength('draft')}
-                                percent={getPercentByStatus('draft')}
-                                price={getTotalAmount('draft')}
+                                title="Cancelled"
+                                total={getInvoiceLength('cancelled')}
+                                percent={getPercentByStatus('cancelled')}
+                                price={getTotalAmount('cancelled')}
                                 icon="solar:file-corrupted-bold-duotone"
                                 color={theme.vars.palette.text.secondary}
                             />

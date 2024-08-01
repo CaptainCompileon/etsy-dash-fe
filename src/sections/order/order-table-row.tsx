@@ -19,7 +19,7 @@ import {fDate, fTime} from 'src/utils/format-time';
 
 import {Label} from 'src/components/label';
 import {Iconify} from 'src/components/iconify';
-import {CustomPopover, usePopover} from 'src/components/custom-popover';
+import {usePopover, CustomPopover} from 'src/components/custom-popover';
 
 import {useApiFetchProductImageUrls} from "../products-v2/etsy/useApi";
 
@@ -159,7 +159,7 @@ export function OrderTableRow({row, selected, onViewRow, onSelectRow}: Props) {
                                 <div>x{item.quantity} </div>
 
                                 <Box
-                                    sx={{width: 110, textAlign: 'right'}}>{fCurrency(item.price.amount, {currency: item.price.currency_code})}</Box>
+                                    sx={{width: 110, textAlign: 'right'}}>{fCurrency(item.price.amount / item.price.divisor - item.shop_coupon, {currency: item.price.currency_code})}</Box>
                             </Stack>
                         ))}
                     </Paper>

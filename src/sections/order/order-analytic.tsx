@@ -56,7 +56,7 @@ export function OrderAnalytic({ title, total, icon, color, percent, price }: Pro
       </Stack>
 
       <Stack spacing={0.5}>
-        <Typography variant="subtitle1">{title}</Typography>
+        <Typography variant="subtitle2">{title}</Typography>
 
         <Box component="span" sx={{ color: 'text.disabled', typography: 'body2' }}>
           {fShortenNumber(total)} invoices

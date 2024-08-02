@@ -9,6 +9,8 @@ import { CONFIG } from 'src/config-global';
 
 import { SplashScreen } from 'src/components/loading-screen';
 
+import {useAuthContext} from "../hooks";
+
 // ----------------------------------------------------------------------
 
 type Props = {
@@ -22,7 +24,7 @@ export function AuthGuard({ children }: Props) {
 
   const searchParams = useSearchParams();
 
-  const { authenticated, loading } = { authenticated: true, loading: false }; // useAuthContext();
+  const { authenticated, loading } =  useAuthContext();
 
   const [isChecking, setIsChecking] = useState<boolean>(true);
 

@@ -15,6 +15,8 @@ import { MotionLazy } from 'src/components/animate/motion-lazy';
 import { detectSettings } from 'src/components/settings/server';
 import { SettingsDrawer, defaultSettings, SettingsProvider } from 'src/components/settings';
 
+import {AuthProvider} from "../auth/context/jwt";
+
 // ----------------------------------------------------------------------
 
 export const viewport: Viewport = {
@@ -35,7 +37,7 @@ export default async function RootLayout({ children }: Props) {
       <body>
         {getInitColorSchemeScript}
 
-        {/* <AuthProvider> */}
+        <AuthProvider>
         <LocalizationProvider>
           <SettingsProvider
             settings={settings}
@@ -50,7 +52,7 @@ export default async function RootLayout({ children }: Props) {
             </ThemeProvider>
           </SettingsProvider>
         </LocalizationProvider>
-        {/* </AuthProvider> */}
+        </AuthProvider>
       </body>
     </html>
   );

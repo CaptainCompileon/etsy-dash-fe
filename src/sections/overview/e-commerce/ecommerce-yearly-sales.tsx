@@ -35,7 +35,7 @@ export function EcommerceYearlySales({ title, subheader, chart, ...other }: Prop
 
   const [selectedSeries, setSelectedSeries] = useState('2023');
 
-  const chartColors = chart.colors ?? [theme.palette.primary.main, theme.palette.warning.main];
+  const chartColors = chart.colors ?? [theme.palette.success.main, theme.palette.info.main];
 
   const chartOptions = useChart({
     colors: chartColors,

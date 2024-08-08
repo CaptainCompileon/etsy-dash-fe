@@ -83,7 +83,7 @@ export function JwtSignUpView() {
       router.refresh();
     } catch (error) {
       console.error(error);
-      setErrorMsg(error instanceof Error ? error.message : error);
+      setErrorMsg(error.message ?? 'Something went wrong!');
     }
   });
 

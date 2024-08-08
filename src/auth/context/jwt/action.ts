@@ -43,8 +43,7 @@ export const signUp = async ({
     const params = {
         email,
         password,
-        firstName,
-        lastName,
+        name: `${firstName} ${lastName}` as string,
     };
 
     try {
@@ -60,7 +59,7 @@ export const signUp = async ({
  *************************************** */
 export const signOut = async (): Promise<void> => {
     try {
-        await axios.post(endpoints.auth.signUp);
+        await axios.post(endpoints.auth.signOut);
 
     } catch (error) {
         console.error('Error during sign out:', error);

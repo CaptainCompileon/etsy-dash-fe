@@ -84,6 +84,7 @@ export function DashboardLayout({ sx, children, data }: DashboardLayoutProps) {
                 { value: 'vi', label: 'Vietnamese', countryCode: 'VN' },
                 { value: 'cn', label: 'Chinese', countryCode: 'CN' },
                 { value: 'ar', label: 'Arabic', countryCode: 'SA' },
+                { value: 'sk', label: 'Slovak', countryCode: 'SK' },
               ],
               account: _account,
               contacts: _contacts,

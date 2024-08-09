@@ -1,101 +1,106 @@
-import type { BoxProps } from '@mui/material/Box';
 import type { CardProps } from '@mui/material/Card';
 
-import Box from '@mui/material/Box';
-import Link from '@mui/material/Link';
+import * as React from 'react';
+
+import Timeline from '@mui/lab/Timeline';
+import TimelineDot from '@mui/lab/TimelineDot';
+import TimelineItem from '@mui/lab/TimelineItem';
+import HotelIcon from '@mui/icons-material/Hotel';
+import Typography from '@mui/material/Typography';
+import RepeatIcon from '@mui/icons-material/Repeat';
+import TimelineContent from '@mui/lab/TimelineContent';
+import FastfoodIcon from '@mui/icons-material/Fastfood';
+import LaptopMacIcon from '@mui/icons-material/LaptopMac';
+import TimelineSeparator from '@mui/lab/TimelineSeparator';
+import TimelineConnector from '@mui/lab/TimelineConnector';
+import TimelineOppositeContent from '@mui/lab/TimelineOppositeContent';
 import Card from '@mui/material/Card';
-import Avatar from '@mui/material/Avatar';
-import CardHeader from '@mui/material/CardHeader';
-
-import { fCurrency } from 'src/utils/format-number';
-
-import { Scrollbar } from 'src/components/scrollbar';
-import { ColorPreview } from 'src/components/color-utils';
+import { CardHeader } from '@mui/material';
 
 // ----------------------------------------------------------------------
-
-type Props = CardProps & {
-  title?: string;
-  subheader?: string;
-  list: {
-    id: string;
-    name: string;
-    coverUrl: string;
-    price: number;
-    priceSale: number;
-    colors: string[];
-  }[];
-};
 
 export function EcommerceLatestProducts({ title, subheader, list, ...other }: Props) {
   return (
     <Card {...other}>
       <CardHeader title={title} subheader={subheader} />
-
-      <Scrollbar sx={{ minHeight: 384 }}>
-        <Box
-          sx={{
-            p: 3,
-            gap: 3,
-            minWidth: 360,
-            display: 'flex',
-            flexDirection: 'column',
-          }}
+    <Timeline position="alternate">
+      <TimelineItem>
+        <TimelineOppositeContent
+          sx={{ m: 'auto 0' }}
+          align="right"
+          variant="body2"
+          color="text.secondary"
         >
-          {list.map((item) => (
-            <Item key={item.id} item={item} />
-          ))}
-        </Box>
-      </Scrollbar>
+          9:30 am
+        </TimelineOppositeContent>
+        <TimelineSeparator>
+          <TimelineConnector />
+          <TimelineDot>
+            <FastfoodIcon />
+          </TimelineDot>
+          <TimelineConnector />
+        </TimelineSeparator>
+        <TimelineContent sx={{ py: '12px', px: 2 }}>
+          <Typography variant="h6" component="span">
+            Eat
+          </Typography>
+          <Typography>Because you need strength</Typography>
+        </TimelineContent>
+      </TimelineItem>
+      <TimelineItem>
+        <TimelineOppositeContent
+          sx={{ m: 'auto 0' }}
+          variant="body2"
+          color="text.secondary"
+        >
+          10:00 am
+        </TimelineOppositeContent>
+        <TimelineSeparator>
+          <TimelineConnector />
+          <TimelineDot color="primary">
+            <LaptopMacIcon />
+          </TimelineDot>
+          <TimelineConnector />
+        </TimelineSeparator>
+        <TimelineContent sx={{ py: '12px', px: 2 }}>
+          <Typography variant="h6" component="span">
+            Code
+          </Typography>
+          <Typography>Because it&apos;s awesome!</Typography>
+        </TimelineContent>
+      </TimelineItem>
+      <TimelineItem>
+        <TimelineSeparator>
+          <TimelineConnector />
+          <TimelineDot color="primary" variant="outlined">
+            <HotelIcon />
+          </TimelineDot>
+          <TimelineConnector sx={{ bgcolor: 'secondary.main' }} />
+        </TimelineSeparator>
+        <TimelineContent sx={{ py: '12px', px: 2 }}>
+          <Typography variant="h6" component="span">
+            Sleep
+          </Typography>
+          <Typography>Because you need rest</Typography>
+        </TimelineContent>
+      </TimelineItem>
+      <TimelineItem>
+        <TimelineSeparator>
+          <TimelineConnector sx={{ bgcolor: 'secondary.main' }} />
+          <TimelineDot color="secondary">
+            <RepeatIcon />
+          </TimelineDot>
+          <TimelineConnector />
+        </TimelineSeparator>
+        <TimelineContent sx={{ py: '12px', px: 2 }}>
+          <Typography variant="h6" component="span">
+            Repeat
+          </Typography>
+          <Typography>Because this is the life you love!</Typography>
+        </TimelineContent>
+      </TimelineItem>
+    </Timeline>
     </Card>
   );
 }
 
-// ----------------------------------------------------------------------
-
-type ItemProps = BoxProps & {
-  item: Props['list'][number];
-};
-
-function Item({ item, sx, ...other }: ItemProps) {
-  return (
-    <Box
-      sx={{
-        gap: 2,
-        display: 'flex',
-        alignItems: 'center',
-        ...sx,
-      }}
-      {...other}
-    >
-      <Avatar
-        variant="rounded"
-        alt={item.name}
-        src={item.coverUrl}
-        sx={{ width: 48, height: 48, flexShrink: 0 }}
-      />
-
-      <Box
-        sx={{ gap: 0.5, minWidth: 0, display: 'flex', flex: '1 1 auto', flexDirection: 'column' }}
-      >
-        <Link noWrap sx={{ color: 'text.primary', typography: 'subtitle2' }}>
-          {item.name}
-        </Link>
-
-        <Box sx={{ gap: 0.5, display: 'flex', typography: 'body2', color: 'text.secondary' }}>
-          {!!item.priceSale && (
-            <Box component="span" sx={{ textDecoration: 'line-through' }}>
-              {fCurrency(item.priceSale)}
-            </Box>
-          )}
-
-          <Box component="span" sx={{ color: item.priceSale ? 'error.main' : 'inherit' }}>
-            {fCurrency(item.price)}
-          </Box>
-        </Box>
-      </Box>
-
-      <ColorPreview limit={3} colors={item.colors} />
-    </Box>
-  );
-}

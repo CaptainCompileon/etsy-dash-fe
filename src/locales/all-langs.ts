@@ -13,6 +13,7 @@ import {
   frFR as frFRDate,
   viVN as viVNDate,
   zhCN as zhCNDate,
+  skSK as skSKDate,
 } from '@mui/x-date-pickers/locales';
 // data grid (MUI)
 import {
@@ -21,6 +22,7 @@ import {
   viVN as viVNDataGrid,
   zhCN as zhCNDataGrid,
   arSD as arSDDataGrid,
+  skSK as skSKDataGrid,
 } from '@mui/x-data-grid/locales';
 
 // ----------------------------------------------------------------------
@@ -74,6 +76,16 @@ export const allLangs = [
     numberFormat: { code: 'ar', currency: 'AED' },
     systemValue: {
       components: { ...arSACore.components, ...arSDDataGrid.components },
+    },
+  },
+  {
+    value: 'sk',
+    label: 'Slovenčina',
+    countryCode: 'SK',
+    adapterLocale: 'sk',
+    numberFormat: { code: 'sk-SK', currency: 'EUR' },
+    systemValue: {
+      components: { ...skSKDate.components, ...skSKDataGrid.components },
     },
   },
 ];

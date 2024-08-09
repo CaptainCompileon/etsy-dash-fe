@@ -105,8 +105,8 @@ export function HeaderBase({
     searchbar = true,
     workspaces = true,
     menuButton = true,
-    localization = false,
-    notifications = false,
+    localization = true,
+    notifications = true,
   } = {},
   ...other
 }: HeaderBaseProps) {

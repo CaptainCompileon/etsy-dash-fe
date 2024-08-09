@@ -1,9 +1,9 @@
 // ----------------------------------------------------------------------
 
-export type LanguageValue = 'en' | 'fr' | 'vi' | 'cn' | 'ar';
+export type LanguageValue = 'en' | 'fr' | 'vi' | 'cn' | 'ar' | 'sk';
 
 export const fallbackLng = 'en';
-export const languages = ['en', 'fr', 'vi', 'cn', 'ar'];
+export const languages = ['en', 'fr', 'vi', 'cn', 'ar', 'sk'];
 export const defaultNS = 'common';
 export const cookieName = 'i18next';
 
@@ -51,5 +51,10 @@ export const changeLangMessages: Record<
     success: 'تم تغيير اللغة!',
     error: 'خطأ في تغيير اللغة!',
     loading: 'جارٍ التحميل...',
+  },
+  sk: {
+    success: 'Jazyk bol zmenený!',
+    error: 'Chyba pri zmene jazyka!',
+    loading: 'Načítava sa...',
   },
 };

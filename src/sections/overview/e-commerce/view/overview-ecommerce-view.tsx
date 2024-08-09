@@ -114,7 +114,6 @@ export function OverviewEcommerceView() {
           selectedOption={selectedOption}
           onDateRangeChange={handleDateRangeChange}
         />
-        {/* You can now use dateRange and selectedOption in your parent component */}
         {/* <p>
           Selected Date Range: {dateRange[0]?.format('YYYY-MM-DD')} to{' '}
           {dateRange[1]?.format('YYYY-MM-DD')}

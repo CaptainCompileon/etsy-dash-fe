@@ -72,10 +72,10 @@ export default function ResponsiveDateRangePickers({
   }: ResponsiveDateRangePickersProps) {
     const anchorRef = useRef<HTMLDivElement>(null);
     const [open, setOpen] = React.useState(false);
-  
+
     const handleQuickSelect = (event: SelectChangeEvent<string>) => {
       const value = event.target.value as DateRangeKey | 'custom';
-  
+
       if (value in dateRanges) {
         const { start, end } = dateRanges[value as DateRangeKey];
         onDateRangeChange([start(), end()], value);
@@ -86,24 +86,23 @@ export default function ResponsiveDateRangePickers({
         setOpen(true);
       }
     };
-  
+
     const handleClose = () => {
       setOpen(false);
     };
-  
+
     const handleDateRangeAccept = (newDateRange: DateRange<Dayjs>) => {
       onDateRangeChange(newDateRange, 'custom');
       handleClose();
     };
-  
+
     const handleSelectClick = () => {
       if (selectedOption === 'custom') {
         setOpen(true);
       }
     };
-  
+
     return (
-    //   <LocalizationProvider dateAdapter={AdapterDayjs}>
         <DemoContainer components={['StaticDateRangePicker']}>
           <Box sx={{ minWidth: 220 }} ref={anchorRef}>
             <FormControl fullWidth>
@@ -154,9 +153,6 @@ export default function ResponsiveDateRangePickers({
             onAccept={handleDateRangeAccept}
           />
         </Popover>
-        <p>Selected Date Range: {dateRange[0]?.format('YYYY-MM-DD')} to {dateRange[1]?.format('YYYY-MM-DD')}</p>
-      <p>Selected Option: {selectedOption}</p>
       </DemoContainer>
-    // </LocalizationProvider>
   );
 }

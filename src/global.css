@@ -76,3 +76,10 @@ input[type='number']::-webkit-inner-spin-button {
   margin: 0;
   -webkit-appearance: none;
 }
+
+body > div.MuiPopover-root.MuiModal-root.css-18yrd4l-MuiModal-root-MuiPopover-root > 
+div.MuiPaper-root.MuiPaper-elevation.MuiPaper-rounded.MuiPaper-elevation8.MuiPopover-paper.css-mv00f9-MuiPaper-root-MuiPopover-paper > 
+div > div.MuiPickersLayout-contentWrapper.css-16b5y55-MuiPickersLayout-contentWrapper > 
+div > div:nth-child(1) {
+    display: none;
+}

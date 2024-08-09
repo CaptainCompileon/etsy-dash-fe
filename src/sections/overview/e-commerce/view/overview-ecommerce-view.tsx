@@ -1,6 +1,9 @@
 'use client';
 
-import { useMemo } from 'react';
+import type { Dayjs } from 'dayjs';
+import type { DateRange } from '@mui/x-date-pickers-pro';
+
+import { useMemo, useState } from 'react';
 
 import Button from '@mui/material/Button';
 import { useTheme } from '@mui/material/styles';
@@ -14,12 +17,14 @@ import {
   _ecommerceLatestProducts,
 } from 'src/_mock';
 
+import ResponsiveDateRangePickers from 'src/components/date-picker/ResponsiveDateRangePickers';
+
 import { useMockedUser } from 'src/auth/hooks';
 
 import { EcommerceWelcome } from '../ecommerce-welcome';
 import { EcommerceNewProducts } from '../ecommerce-new-products';
 import { EcommerceYearlySales } from '../ecommerce-yearly-sales';
-import { useApiShopReceiptsMock } from "../../../order/etsy/useApi";
+import { useApiShopReceiptsMock } from '../../../order/etsy/useApi';
 import { EcommerceSaleByGender } from '../ecommerce-sale-by-gender';
 import { EcommerceSalesOverview } from '../ecommerce-sales-overview';
 import { EcommerceWidgetSummary } from '../ecommerce-widget-summary';
@@ -28,33 +33,41 @@ import { EcommerceLatestProducts } from '../ecommerce-latest-products';
 import type { FinanceSheet } from '../../../order/etsy/etsy-utils';
 // import type { ShopReceipt } from "../../../order/etsy/etsy-api.types";
 
-
-const calculateRevenue = (orders: FinanceSheet[]): number => orders.reduce((total, order) => total + (order.shopReceipt?.grandtotal?.amount ?? 0) / (order.shopReceipt?.grandtotal?.divisor ?? 1), 0);
+const calculateRevenue = (orders: FinanceSheet[]): number =>
+  orders.reduce(
+    (total, order) =>
+      total +
+      (order.shopReceipt?.grandtotal?.amount ?? 0) / (order.shopReceipt?.grandtotal?.divisor ?? 1),
+    0
+  );
 
 const calculateSales = (orders: FinanceSheet[]): number => orders.length;
 
 // const calculateProfit = (orders: FinanceSheet[]): number => orders.reduce((total, order) => total + order.netProfit, 0);
 
 const extractMonthlyData = (orders: FinanceSheet[]) => {
-  const monthlyData = orders.reduce((acc, order) => {
-    const date = new Date(order.orderDate);
-    const month = date.toLocaleString('default', { month: 'short' });
+  const monthlyData = orders.reduce(
+    (acc, order) => {
+      const date = new Date(order.orderDate);
+      const month = date.toLocaleString('default', { month: 'short' });
 
-    if (!acc[month]) {
-      acc[month] = { revenue: 0, sales: 0, profit: 0 };
-    }
+      if (!acc[month]) {
+        acc[month] = { revenue: 0, sales: 0, profit: 0 };
+      }
 
-    const amount = order.shopReceipt?.grandtotal?.amount ?? 0;
-    const divisor = order.shopReceipt?.grandtotal?.divisor ?? 1;
-    const revenue = amount / divisor;
-    const profit = order.netProfit ?? 0;
+      const amount = order.shopReceipt?.grandtotal?.amount ?? 0;
+      const divisor = order.shopReceipt?.grandtotal?.divisor ?? 1;
+      const revenue = amount / divisor;
+      const profit = order.netProfit ?? 0;
 
-    acc[month].revenue += revenue;
-    acc[month].sales += 1;
-    acc[month].profit += profit;
+      acc[month].revenue += revenue;
+      acc[month].sales += 1;
+      acc[month].profit += profit;
 
-    return acc;
-  }, {} as Record<string, { revenue: number; sales: number; profit: number }>);
+      return acc;
+    },
+    {} as Record<string, { revenue: number; sales: number; profit: number }>
+  );
 
   const categories = Object.keys(monthlyData);
   const revenueSeries = categories.map((month) => monthlyData[month].revenue);
@@ -65,15 +78,23 @@ const extractMonthlyData = (orders: FinanceSheet[]) => {
 };
 // ----------------------------------------------------------------------
 
-
 export function OverviewEcommerceView() {
+  const [dateRange, setDateRange] = useState<DateRange<Dayjs>>([null, null]);
+  const [selectedOption, setSelectedOption] = useState<string>('');
+
+  const handleDateRangeChange = (newDateRange: DateRange<Dayjs>, newSelectedOption: string) => {
+    setDateRange(newDateRange);
+    setSelectedOption(newSelectedOption);
+    // You can perform any additional actions here with the new date range and selected option
+  };
+
   const { user } = useMockedUser();
 
   const theme = useTheme();
 
   const { financeSheets } = useApiShopReceiptsMock();
 
-  console.log("PRETEBA",financeSheets);
+  console.log('PRETEBA', financeSheets);
 
   const totalRevenue = useMemo(() => calculateRevenue(financeSheets), [financeSheets]);
   const totalSales = useMemo(() => calculateSales(financeSheets), [financeSheets]);
@@ -84,9 +105,23 @@ export function OverviewEcommerceView() {
     [financeSheets]
   );
 
-
   return (
     <DashboardContent maxWidth="xl">
+      <Grid container justifyContent="flex-end">
+        <Grid xs={12} md={8} xl={2} mb={2}>
+        <ResponsiveDateRangePickers
+          dateRange={dateRange}
+          selectedOption={selectedOption}
+          onDateRangeChange={handleDateRangeChange}
+        />
+        {/* You can now use dateRange and selectedOption in your parent component */}
+        {/* <p>
+          Selected Date Range: {dateRange[0]?.format('YYYY-MM-DD')} to{' '}
+          {dateRange[1]?.format('YYYY-MM-DD')}
+        </p>
+        <p>Selected Option: {selectedOption}</p> */}
+        </Grid>
+        </Grid>
       <Grid container spacing={3}>
         <Grid xs={12} md={8}>
           <EcommerceWelcome
@@ -133,7 +168,7 @@ export function OverviewEcommerceView() {
 
         <Grid xs={12} md={4}>
           <EcommerceWidgetSummary
-            title="totalProfit"
+            title="Total Profit"
             percent={0.6}
             total={4876}
             chart={{
@@ -144,56 +179,56 @@ export function OverviewEcommerceView() {
           />
         </Grid>
 
-          <Grid xs={12} md={6} lg={8}>
-            <EcommerceYearlySales
-              title="Sales Overview"
-              subheader="(+43%) than last year"
-              chart={{
-                categories: [
-                  'Jan',
-                  'Feb',
-                  'Mar',
-                  'Apr',
-                  'May',
-                  'Jun',
-                  'Jul',
-                  'Aug',
-                  'Sep',
-                  'Oct',
-                  'Nov',
-                  'Dec',
-                ],
-                series: [
-                  {
-                    name: '2022',
-                    data: [
-                      {
-                        name: 'Revenue',
-                        data: [10, 41, 35, 51, 49, 62, 69, 91, 148, 35, 51, 49],
-                      },
-                      {
-                        name: 'Profit',
-                        data: [10, 34, 13, 56, 77, 88, 99, 77, 45, 13, 56, 77],
-                      },
-                    ],
-                  },
-                  {
-                    name: '2023',
-                    data: [
-                      {
-                        name: 'Total income',
-                        data: [51, 35, 41, 10, 91, 69, 62, 148, 91, 69, 62, 49],
-                      },
-                      {
-                        name: 'Total expenses',
-                        data: [56, 13, 34, 10, 77, 99, 88, 45, 77, 99, 88, 77],
-                      },
-                    ],
-                  },
-                ],
-              }}
-            />
-          </Grid>
+        <Grid xs={12} md={6} lg={8}>
+          <EcommerceYearlySales
+            title="Sales Overview"
+            subheader="(+43%) than last year"
+            chart={{
+              categories: [
+                'Jan',
+                'Feb',
+                'Mar',
+                'Apr',
+                'May',
+                'Jun',
+                'Jul',
+                'Aug',
+                'Sep',
+                'Oct',
+                'Nov',
+                'Dec',
+              ],
+              series: [
+                {
+                  name: '2022',
+                  data: [
+                    {
+                      name: 'Revenue',
+                      data: [10, 41, 35, 51, 49, 62, 69, 91, 148, 35, 51, 49],
+                    },
+                    {
+                      name: 'Profit',
+                      data: [10, 34, 13, 56, 77, 88, 99, 77, 45, 13, 56, 77],
+                    },
+                  ],
+                },
+                {
+                  name: '2023',
+                  data: [
+                    {
+                      name: 'Total income',
+                      data: [51, 35, 41, 10, 91, 69, 62, 148, 91, 69, 62, 49],
+                    },
+                    {
+                      name: 'Total expenses',
+                      data: [56, 13, 34, 10, 77, 99, 88, 45, 77, 99, 88, 77],
+                    },
+                  ],
+                },
+              ],
+            }}
+          />
+        </Grid>
 
         <Grid xs={12} md={6} lg={4} display="grid">
           <EcommerceLatestProducts title="Etsy Timeline" list={_ecommerceLatestProducts} />
@@ -220,4 +255,3 @@ export function OverviewEcommerceView() {
     </DashboardContent>
   );
 }
-

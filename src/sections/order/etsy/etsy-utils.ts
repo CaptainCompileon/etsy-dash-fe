@@ -1,5 +1,4 @@
-import type {ShopReceipt} from "./etsy-api.types";
-import type { ShopWithUserId } from './useApi.js';
+import type {FinanceSheet, ShopReceipt} from "./etsy-api.types";
 
 export const createFinanceSheet = (data: ShopReceipt[]): FinanceSheet[] =>
   data.map((item, index) => {
@@ -65,38 +64,3 @@ export const createFinanceSheet = (data: ShopReceipt[]): FinanceSheet[] =>
     return financeSheet;
   });
 
-export type FinanceSheet = {
-  firstName: string;
-  middleName: string;
-  lastName: string;
-  orderDate: string;
-  itemPrice: number;
-  discount: number;
-  subTotal: number;
-  totalShippingCost: number;
-  tax: number;
-  total: number;
-  transactionFees: number;
-  tfVAT: number;
-  processingFees: number;
-  pfVAT: number;
-  listingFee: number;
-  lfVAT: number;
-  shippingFee: number;
-  sfVAT: number;
-  shopReceipt: ShopReceipt;
-  avatarUrl: string;
-  netProfit: number;
-};
-
-export type Shop = {
-  icon?: string;
-  name?: string;
-  url?: string;
-  shop_id: number;
-};
-
-export type UserData = {
-  user: ShopWithUserId;
-  data: FinanceSheet;
-};

@@ -1,12 +1,11 @@
-import { useState, useEffect } from 'react';
+import {useState, useEffect} from 'react';
 
-import { fetchShopListingMock } from './etsy-api';
-import { createFinanceSheet } from './etsy-utils';
+import {fetchShopListingMock} from './etsy-api';
+import {createFinanceSheet} from './etsy-utils';
 
-import type { Shop, FinanceSheet } from './etsy-utils';
-import type { ShopReceipt, Transaction, EtsyApiResponse } from './etsy-api.types';
+import type {Shop, FinanceSheet} from './etsy-utils';
+import type {ShopReceipt, Transaction, EtsyApiResponse, ShopWithUserId} from './etsy-api.types';
 
-export type ShopWithUserId = Shop & { user_id?: number };
 // TODO(Adam): Throwing errors like this is in general not a good practice,
 // we could create some Provider who will handle these errors and show a toast
 // or something similar to the user
@@ -47,7 +46,7 @@ export function useApiShopReceipts(
           // console.log('fetching data', json);
           const results: ShopReceipt[] = json?.results ? json?.results : [];
           const financeSheet = createFinanceSheet(results);
-          allData.push({ user, data: financeSheet });
+          allData.push({user, data: financeSheet});
         }
 
         setUserData(allData);
@@ -65,7 +64,7 @@ export function useApiShopReceipts(
     };
   }, [apiUrl]);
 
-  return { userData, loading, error };
+  return {userData, loading, error};
 }
 
 export function useApiShop(
@@ -116,7 +115,7 @@ export function useApiShop(
     setShops(newShops);
   };
 
-  return { shops, loading, error, deleteShop };
+  return {shops, loading, error, deleteShop};
 }
 
 export function getShopLoginLink(
@@ -139,7 +138,7 @@ export function getShopLoginLink(
     }
   };
 
-  return { fetchShopLink, error };
+  return {fetchShopLink, error};
 }
 
 export function useApiShopReceiptsMock() {
@@ -172,7 +171,7 @@ export function useApiShopReceiptsMock() {
     };
   }, []);
 
-  return { financeSheets, loading };
+  return {financeSheets, loading};
 }
 
 export function useDeleteUserById(apiUrl = process.env.API_URL || 'http://localhost:3003') {
@@ -202,7 +201,7 @@ export function useDeleteUserById(apiUrl = process.env.API_URL || 'http://localh
     }
   };
 
-  return { deleteUser, loading, error };
+  return {deleteUser, loading, error};
 }
 
 export function useApiFetchProductImageUrls(
@@ -215,7 +214,7 @@ export function useApiFetchProductImageUrls(
     // Function to fetch avatar URL for each item
     const fetchProductImageUrls = async () => {
       try {
-        const productImageUrlsCopy = { ...productImageUrls };
+        const productImageUrlsCopy = {...productImageUrls};
 
         for (const item of items) {
           const response = await fetch(
@@ -235,5 +234,5 @@ export function useApiFetchProductImageUrls(
     fetchProductImageUrls();
   }, [items]);
 
-  return { productImageUrls };
+  return {productImageUrls};
 }

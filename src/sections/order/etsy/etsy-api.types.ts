@@ -160,3 +160,47 @@ export type ProductData = {
   value_ids: number[];
   values: string[];
 };
+
+
+export type FinanceSheet = {
+  firstName: string;
+  middleName: string;
+  lastName: string;
+  orderDate: string;
+  itemPrice: number;
+  discount: number;
+  subTotal: number;
+  totalShippingCost: number;
+  tax: number;
+  total: number;
+  transactionFees: number;
+  tfVAT: number;
+  processingFees: number;
+  pfVAT: number;
+  listingFee: number;
+  lfVAT: number;
+  shippingFee: number;
+  sfVAT: number;
+  shopReceipt: ShopReceipt;
+  avatarUrl: string;
+  netProfit: number;
+};
+
+export type Shop = {
+  icon?: string;
+  name?: string;
+  url?: string;
+  shop_id: number;
+};
+
+export type UserData = {
+  user: ShopWithUserId;
+  data: FinanceSheet;
+};
+
+export type EtsyApiData = {
+  users: UserData[];
+  shops: Shop[];
+}
+
+export type ShopWithUserId = Shop & { user_id?: number };

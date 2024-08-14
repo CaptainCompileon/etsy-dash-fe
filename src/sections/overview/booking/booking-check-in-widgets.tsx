@@ -77,18 +77,6 @@ export function BookingCheckInWidgets({ chart, ...other }: Props) {
         }
       >
         {chart.series.map((item) => (
-          <Box
-            key={item.label}
-            sx={{
-              py: 5,
-              gap: 3,
-              width: 1,
-              display: 'flex',
-              px: { xs: 3, sm: 0 },
-              alignItems: 'center',
-              justifyContent: { sm: 'center' },
-            }}
-          >
             <Chart
               type="radialBar"
               series={[item.percent]}
@@ -109,12 +97,6 @@ export function BookingCheckInWidgets({ chart, ...other }: Props) {
               width={80}
               height={80}
             />
-
-            <div>
-              <Box sx={{ mb: 0.5, typography: 'h5' }}>{fNumber(item.total)}</Box>
-              <Box sx={{ typography: 'body2', color: 'text.secondary' }}>{item.label}</Box>
-            </div>
-          </Box>
         ))}
       </Stack>
     </Card>

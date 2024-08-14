@@ -43,6 +43,7 @@ export const createFinanceSheet = (data: ShopReceipt[]): FinanceSheet[] =>
       // TODO: find other solution
       avatarUrl: `/assets/images/avatars/avatar_${index + 1}.jpg`,
       netProfit: 0,
+      costOfGoods: 25,
     };
 
     const netProfit =

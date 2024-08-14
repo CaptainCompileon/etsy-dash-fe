@@ -79,12 +79,12 @@ export function DashboardLayout({ sx, children, data }: DashboardLayoutProps) {
             data={{
               nav: navData,
               langs: [
+                { value: 'sk', label: 'Slovak', countryCode: 'SK' },
                 { value: 'en', label: 'English', countryCode: 'GB' },
                 { value: 'fr', label: 'French', countryCode: 'FR' },
                 { value: 'vi', label: 'Vietnamese', countryCode: 'VN' },
                 { value: 'cn', label: 'Chinese', countryCode: 'CN' },
                 { value: 'ar', label: 'Arabic', countryCode: 'SA' },
-                { value: 'sk', label: 'Slovak', countryCode: 'SK' },
               ],
               account: _account,
               contacts: _contacts,
@@ -95,6 +95,7 @@ export function DashboardLayout({ sx, children, data }: DashboardLayoutProps) {
               signIn: false,
               purchase: false,
               helpLink: false,
+              localization: false,
             }}
             slots={{
               topArea: (

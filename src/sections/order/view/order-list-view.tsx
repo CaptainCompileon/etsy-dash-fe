@@ -61,6 +61,7 @@ const TABLE_HEAD = [
     {id: 'shopReceipt.created_timestamp', label: 'Date', width: 140},
     { id: 'subTotal', label: 'Subtotal' },
     { id: 'netProfit', label: 'Net profit' },
+    { id: 'costOfGoods', label: 'COGs' },
     {
         id: 'totalQuantity',
         label: 'Items',
@@ -362,7 +363,8 @@ function applyFilter({inputData, comparator, filters, dateError}: ApplyFilterPro
             (order) =>
                 order.shopReceipt?.receipt_id.toString().toLowerCase().indexOf(name.toLowerCase()) !== -1 ||
                 order.lastName?.toLowerCase().indexOf(name.toLowerCase()) !== -1 ||
-                order.firstName?.toLowerCase().indexOf(name.toLowerCase()) !== -1
+                order.firstName?.toLowerCase().indexOf(name.toLowerCase()) !== -1 ||
+                order.costOfGoods.toString().toLowerCase().indexOf(name.toLowerCase()) !== -1 // Add this line
         );
     }
 

@@ -31,6 +31,8 @@ import { EcommerceWidgetSummary } from '../ecommerce-widget-summary';
 import { EcommerceLatestProducts } from '../ecommerce-latest-products';
 
 import type { FinanceSheet } from '../../../order/etsy/etsy-utils';
+import { BankingOverview } from '../../banking/banking-overview';
+import { BookingCheckInWidgets } from '../../booking/booking-check-in-widgets';
 // import type { ShopReceipt } from "../../../order/etsy/etsy-api.types";
 
 const calculateRevenue = (orders: FinanceSheet[]): number =>
@@ -138,7 +140,7 @@ export function OverviewEcommerceView() {
         <Grid xs={12} md={4}>
           <EcommerceNewProducts list={_ecommerceNewProducts} />
         </Grid>
-
+        
         <Grid xs={12} md={4}>
           <EcommerceWidgetSummary
             title="Revenue"
@@ -227,6 +229,10 @@ export function OverviewEcommerceView() {
               ],
             }}
           />
+        </Grid>
+
+        <Grid xs={12} md={8}>
+          <BankingOverview/>
         </Grid>
 
         <Grid xs={12} md={6} lg={4} display="grid">

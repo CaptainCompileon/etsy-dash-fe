@@ -88,6 +88,7 @@ export function OrderTableRow({row, selected, onViewRow, onSelectRow}: Props) {
 
             <TableCell> {fCurrency(row.subTotal)} </TableCell>
             <TableCell> {fCurrency(row.netProfit)} </TableCell>
+            <TableCell align="left">{fCurrency(row.costOfGoods)}</TableCell>
 
             <TableCell align="center"> {getTotalQuantity(row.shopReceipt.transactions as Transaction[])} </TableCell>
 

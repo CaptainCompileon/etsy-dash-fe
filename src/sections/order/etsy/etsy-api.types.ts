@@ -184,6 +184,7 @@ export type FinanceSheet = {
   shopReceipt: ShopReceipt;
   avatarUrl: string;
   netProfit: number;
+  costOfGoods: number;
 };
 
 export type Shop = {

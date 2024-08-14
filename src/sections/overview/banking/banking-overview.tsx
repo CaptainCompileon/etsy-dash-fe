@@ -16,20 +16,22 @@ import { Iconify } from 'src/components/iconify';
 import { Chart, useChart } from 'src/components/chart';
 import { CustomTabs } from 'src/components/custom-tabs';
 
+import { BookingCheckInWidgets } from '../booking/booking-check-in-widgets';
+
 // ----------------------------------------------------------------------
 
 const TABS = [
   {
     value: 'income',
     label: 'Income',
-    percent: 8.2,
+    percent: 78.2,
     total: 9990,
     chart: { series: [{ data: [5, 31, 33, 50, 100, 76, 72, 76, 89] }] },
   },
   {
     value: 'expenses',
     label: 'Expenses',
-    percent: -6.6,
+    percent: -33.6,
     total: 1989,
     chart: { series: [{ data: [10, 41, 35, 51, 49, 62, 69, 91, 148] }] },
   },
@@ -41,7 +43,7 @@ export function BankingOverview({ sx, ...other }: CardProps) {
   const tabs = useTabs('income');
 
   const chartColors =
-    tabs.value === 'income' ? [theme.palette.primary.dark] : [theme.palette.warning.dark];
+    tabs.value === 'income' ? [theme.palette.primary.light] : [theme.palette.warning.light];
 
   const chartOptions = useChart({
     colors: chartColors,
@@ -104,93 +106,137 @@ export function BankingOverview({ sx, ...other }: CardProps) {
       value={tabs.value}
       onChange={tabs.onChange}
       variant="fullWidth"
-      sx={{ my: 3, borderRadius: 2 }}
+      sx={{ my: 3, borderRadius: 2, p:1, mx:0}}
       slotProps={{
         indicator: { borderRadius: 1.5, boxShadow: theme.customShadows.z4 },
-        tab: { p: 3 },
+        tab: { p: 1},
       }}
     >
-      {TABS.map((tab) => (
-        <Tab
-          key={tab.value}
-          value={tab.value}
-          label={
-            <Box
-              sx={{
-                width: 1,
-                display: 'flex',
-                gap: { xs: 1, md: 2.5 },
-                flexDirection: { xs: 'column', md: 'row' },
-                alignItems: { xs: 'center', md: 'flex-start' },
-              }}
-            >
+      {TABS.map((tab) => {
+        const isNegative = tab.percent < 0;
+
+        // Angle calculations
+        const startAngle = isNegative ? 360 - (Math.abs(tab.percent) * 360) / 100 : 0; // Start at 0° for positive values
+        const endAngle = isNegative
+          ? (tab.percent * 360) / 100 // End at the percentage-based angle for positive values
+          : 360; // End at 360° for negative values
+
+        const startColor = isNegative ? theme.palette.warning.light : theme.palette.primary.light;
+        const endColor = isNegative ? theme.palette.error.main : theme.palette.success.main;
+
+        return (
+          <Tab
+            key={tab.value}
+            value={tab.value}
+            label={
               <Box
                 sx={{
-                  width: 48,
-                  height: 48,
-                  flexShrink: 0,
-                  borderRadius: '50%',
-                  alignItems: 'center',
-                  color: 'primary.lighter',
-                  justifyContent: 'center',
-                  bgcolor: 'primary.darker',
-                  display: { xs: 'none', md: 'inline-flex' },
-                  ...(tab.value === 'expenses' && {
-                    color: 'warning.lighter',
-                    bgcolor: 'warning.darker',
-                  }),
+                  width: 1,
+                  display: 'flex',
+                  gap: { xs: 1, md: 2.5 },
+                  flexDirection: { xs: 'column', md: 'row' },
+                  alignItems: { xs: 'center', md: 'flex-start' },
                 }}
               >
-                <Iconify
-                  width={24}
-                  icon={
-                    tab.value === 'expenses'
-                      ? 'eva:diagonal-arrow-right-up-fill'
-                      : 'eva:diagonal-arrow-left-down-fill'
-                  }
-                />
-              </Box>
-
-              <div>
-                <Box
-                  sx={{
-                    mb: 1,
-                    gap: 0.5,
-                    display: 'flex',
-                    alignItems: 'center',
-                    typography: 'subtitle2',
-                  }}
-                >
-                  {tab.label}
-                  <Tooltip title={tab.label} placement="top">
-                    <Iconify width={16} icon="eva:info-outline" sx={{ color: 'text.disabled' }} />
-                  </Tooltip>
+                <Box sx={{ position: 'relative', width: 140, height: 140 }}>
+                  <Chart
+                    type="radialBar"
+                    series={[Math.abs(tab.percent)]}
+                    options={{
+                      ...chartOptions,
+                      chart: {
+                        sparkline: { enabled: true },
+                      },
+                      plotOptions: {
+                        radialBar: {
+                          startAngle,
+                          endAngle,
+                          inverseOrder: true,
+                          hollow: {
+                            size: '60%',
+                          },
+                          track: {
+                            background: theme.palette.background.neutral,
+                            strokeWidth: '100%',
+                            startAngle: 1,
+                            endAngle: 0, 
+                          },
+                          dataLabels: {
+                            name: { show: false },
+                            value: {
+                              offsetY: 6,
+                              fontSize: theme.typography.subtitle2.fontSize as string,
+                              fontWeight: theme.typography.subtitle2.fontWeight,
+                              color: theme.palette.text.primary,
+                              formatter: (val: number) => `${tab.percent}%`,
+                            },
+                          },
+                        },
+                      },
+                      fill: {
+                        type: 'gradient',
+                        gradient: {
+                          shade: 'dark',
+                          type: 'circle',
+                          shadeIntensity: 0.5,
+                          gradientToColors: [endColor],
+                          inverseColors: false,
+                          opacityFrom: 1,
+                          opacityTo: 1,
+                          stops: [0, 100],
+                        },
+                      },
+                      stroke: {
+                        lineCap: 'round',
+                        dashArray: 0,
+                      },
+                      colors: [startColor],
+                    }}
+                    width="100%"
+                    height="100%"
+                  />
                 </Box>
 
-                <Box sx={{ typography: 'h4' }}>{fCurrency(tab.total)}</Box>
-              </div>
+                <div>
+                  <Box
+                    sx={{
+                      mb: 1,
+                      gap: 0.5  ,
+                      display: 'flex',
+                      alignItems: 'center',
+                      typography: 'subtitle2',
+                    }}
+                  >
+                    {tab.label}
+                    <Tooltip title={tab.label} placement="top">
+                      <Iconify width={16} icon="eva:info-outline" sx={{ color: 'text.disabled' }} />
+                    </Tooltip>
+                  </Box>
 
-              <Label
-                color={tab.percent < 0 ? 'error' : 'success'}
-                startIcon={
-                  <Iconify
-                    width={24}
-                    icon={
-                      tab.percent < 0
-                        ? 'solar:double-alt-arrow-down-bold-duotone'
-                        : 'solar:double-alt-arrow-up-bold-duotone'
-                    }
-                  />
-                }
-                sx={{ top: 8, right: 8, position: { md: 'absolute' } }}
-              >
-                {tab.percent > 0 && '+'}
-                {fPercent(tab.percent)}
-              </Label>
-            </Box>
-          }
-        />
-      ))}
+                  <Box sx={{ typography: 'h4' }}>{fCurrency(tab.total)}</Box>
+                </div>
+
+                <Label
+                  color={isNegative ? 'error' : 'success'}
+                  startIcon={
+                    <Iconify
+                      width={24}
+                      icon={
+                        isNegative
+                          ? 'solar:double-alt-arrow-down-bold-duotone'
+                          : 'solar:double-alt-arrow-up-bold-duotone'
+                      }
+                    />
+                  }
+                  sx={{ top: 8, right: 8, position: { md: 'absolute' } }}
+                >
+                  {fPercent(tab.percent)}
+                </Label>
+              </Box>
+            }
+          />
+        );
+      })}
     </CustomTabs>
   );
 

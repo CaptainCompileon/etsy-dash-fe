@@ -30,8 +30,8 @@ export function useChart(options?: ChartOptions): ChartOptions {
       options: {
         plotOptions: {
           bar: {
-            borderRadius: 3,
-            columnWidth: '80%',
+            borderRadius: 1,
+            columnWidth: '100%',
           },
         },
       },
@@ -41,7 +41,7 @@ export function useChart(options?: ChartOptions): ChartOptions {
       options: {
         plotOptions: {
           bar: {
-            columnWidth: '60%',
+            columnWidth: '100%',
           },
         },
       },
